@@ -1,33 +1,201 @@
-.App {
+.app {
+  text-align: center;
+  margin-left: 25px;
+  margin-right: 25px;
+  -webkit-overflow-scrolling: touch;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  overflow: scroll;
+  margin-right: 0px;
+}
+
+.header {
+  font-size: 30px;
+  color: rgba(77,77,77,1);
+  border-bottom: 1px solid #DDD;
+  height: 50px;
+}
+
+.intro{
+  border-bottom: 1px solid #DDD;
+  padding-bottom: 20px;
+}
+
+.body{
+  /* overflow: auto;
+  overflow-y: scroll; 
+  -webkit-overflow-scrolling: touch;
+  position:relative; 
+  overflow-x:hidden; */
+  /* border-bottom: 1px solid #DDD; */
+}
+
+.question {
+  font-size: 15px;
+  color: #464646;
+  font-weight: bold;
+  /* width: 400px; */
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.answer{
+  padding-left: 10px;
+  margin-bottom: 10px;
+  border-left: 4px solid rgba(82, 142, 204, 0.56);
+}
+
+.question1-checkboxes{
+  display: grid;
+  grid-template-columns: 200px 200px;
+  text-align: left;
+  width: 400px;
+  margin: 0 auto;
+  padding-left: 80px;
+}
+
+.question-wrapper{
+  display:flex;
+  align-items: center; 
+  justify-content: center; 
+}
+
+.otheruses{
+  width: 50%;
+  padding-left: 20px;
+  font-size: 12px;
+  height: 20px;
+  font-size: 11pt;
+}
+
+.otheruses-container{
+  width: 500px;
+  margin: 0 auto;
+  padding-top: 5px;
+}
+.email{
+  width: 50%;
+  padding-left: 20px;
+  font-size: 12px;
+  height: 30px;
+  font-size: 12pt;
+}
+
+  .email.red{
+    border-color: red;
+  }
+
+.comments{
+  height: 60px;
+  width: 50%;
+  padding-left: 20px;
+  font-size: 12px;
+  border-color: #d9dde0;
+  font-size: 12pt;
+}
+
+.button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: rgb(255,255,255); /* Old browsers */
+  background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+  font-size: 12px;
+  /*font-family: monospace !important;*/
+  /*font-family: Arial;*/
+  padding: 5px;
+  color: #2D343C !important;
+  border-radius: 2px;
+  min-height: 32px;
+  border: 1px solid #ccc;
+  font-weight: normal;
+}
+
+.button:hover {
+  border: 1px solid #80B9FF;
+  box-shadow: 0px 0px 5px #80B9FF;
+}
+
+.button:active {
+  border: 1px solid #2074B7;
+}
+
+.button:focus {
+  border: 1px solid #2074B7;
+}
+
+.button.blue {
+  background: #3980CC; /* Old browsers */
+  background: -moz-linear-gradient(top, #3980CC 0%, #2865A2 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3980CC), color-stop(100%,#2865A2)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #3980CC 0%,#2865A2 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #3980CC 0%,#2865A2 100%); /* Opera 11.10+ */
+  background: linear-gradient(to bottom, #3980CC 0%,#2865A2 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3980CC', endColorstr='#2865A2',GradientType=0 ); /* IE6-9 */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7abcff', endColorstr='#4096ee',GradientType=0 ); /* IE6-9 */
+  border: 1px solid #3D7B9E; color: #FFFFFF !important;
+  }
+
+.success{
+  background-color: #78e478;
+  /* width: 100%; */
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 14pt;
+  font-weight: bold;
+  font-weight: 700;
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+.bot{
+  background-color: #db5050;
+  width: 500px;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 14pt;
+  font-weight: bold;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+.hidden{
+  display: none;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media only screen and (max-width: 600px) {
+  .question1-checkboxes{
+    display: grid;
+    grid-template-columns: 128px 200px;
+    text-align: left;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 3px;
   }
-  to {
-    transform: rotate(360deg);
-  }
+
+  .otheruses-container {
+    width: 100%;
+    margin: 0 auto;
+    padding-top: 5px;
 }
+}
+
+/* Safari 10.1+ */
+/* Safari 10.1+ (alternate method) */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) {
+  .app{
+    overflow: scroll;
+  }
+}}

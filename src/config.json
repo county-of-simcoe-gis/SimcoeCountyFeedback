@@ -1,0 +1,8 @@
+{
+    "postUrl" : "###/opengiswebapi/postFeedback",
+    "getUrl" : "###/opengiswebapi/getFeedback/",
+    "devCaptchaKey" : "###",
+    "devCaptchaResponseUrl" : "http://localhost:8085/getCaptchaResponse/DEV/",
+    "productionCaptchaKey" : "###",
+    "productionCaptchaResponseUrl" : "###/opengiswebapi/getCaptchaResponse/PRODUCTION/"
+}
