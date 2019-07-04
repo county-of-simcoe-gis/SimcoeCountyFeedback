@@ -6,7 +6,7 @@ import {
   GoogleReCaptchaProvider,
   GoogleReCaptcha
 } from 'react-google-recaptcha-v3';
-import config from './config-secure.json'
+import config from './config.json'
 
 // POPULATE YOUR CONFIG IN THIS CONFIG
 //import config from './config.json'
