@@ -153,31 +153,6 @@ class App extends React.Component {
 
     console.log(feedbackItem)
     this.postData(postUrl, feedbackItem);  
-
-    // SAVE PAGE AS IMAGE
-    // const input = document.getElementById('main');
-    // var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-    // var is_safari = navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
-
-    // isFirefox = true;
-    // if (is_safari){  
-    //   html2canvas(input, {useCORS: true, allowTaint: false, logging: true}).then((canvas) => {
-    //     const imgData = canvas.toDataURL('image/png');
-    //     feedbackItem.image = imgData;
-    //     this.postData(postUrl, feedbackItem);
-    //   });
-    // } else {
-    //   htmlToImage.toPng(input)
-    //   .then((dataUrl) => {
-    //     var img = new Image();
-    //     img.src = dataUrl;
-    //     feedbackItem.image = dataUrl;
-    //     this.postData(postUrl, feedbackItem);      
-    //   })
-    //   .catch(function (error) {
-    //     console.error('Error saving image of page.', error);
-    //   });
-    // }
    
     // HIDE MAIN PAGE
     setTimeout(() => {
