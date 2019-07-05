@@ -3,7 +3,7 @@
 #custom
 /src/config-secure.json
 sc_copyToServer.bat
-config.json
+/src/config.json
 
 # dependencies
 /node_modules
