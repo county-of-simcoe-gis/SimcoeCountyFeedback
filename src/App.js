@@ -142,7 +142,6 @@ class App extends React.Component {
       otherUses: this.state.otherUses
     };
 
-    console.log(feedbackItem);
     this.postData(postUrl, feedbackItem);
 
     // HIDE MAIN PAGE
@@ -188,7 +187,6 @@ class App extends React.Component {
     });
   }
 
-  //<GoogleReCaptchaProvider reCaptchaKey={window.location.hostname === "localhost" ? devKey : productionKey}>
   render() {
     return (
       <GoogleReCaptchaProvider reCaptchaKey={key}>
@@ -197,7 +195,8 @@ class App extends React.Component {
           <div className={this.state.submitted ? "hidden" : ""}>
             <h1 className="header">Feedback</h1>
             <div className="intro">
-              Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear from you!<br />
+              Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear from you!
+              <br />
             </div>
 
             <div className="body">
@@ -247,7 +246,8 @@ class App extends React.Component {
                 />
               </div>
               <div className="otheruses-container">
-                <label>OTHER:</label>&nbsp;<input className={"otheruses"} placeholder="" onChange={this.onOtherUsesChange} value={this.state.otherUses} />
+                <label>OTHER:</label>&nbsp;
+                <input className={"otheruses"} placeholder="" onChange={this.onOtherUsesChange} value={this.state.otherUses} />
               </div>
 
               <div className="question">Please rate the usefulness to you or your organization.</div>
@@ -296,11 +296,13 @@ class App extends React.Component {
           </div>
 
           <div className={this.state.submitted ? "success" : "hidden"}>
-            Thank you for the Feedback! <br />If you left a question and email, we'll get back to you shortly!
+            Thank you for the Feedback! <br />
+            If you left a question and email, we'll get back to you shortly!
           </div>
 
           <div className={this.state.botDetected ? "bot" : "hidden"}>
-            You've been identified as a bot. <br />Contact sim-gis@simcoe.ca directly if you're human.
+            You've been identified as a bot. <br />
+            Contact sim-gis@simcoe.ca directly if you're human.
           </div>
         </div>
       </GoogleReCaptchaProvider>
