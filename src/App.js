@@ -33,12 +33,31 @@ class App extends React.Component {
     comments: "",
     submitted: false,
     otherUses: "",
-    botDetected: false
+    botDetected: false,
+    reportProblem: false,
+    myMapsId: null,
+    featureId: null
   };
 
   componentDidMount() {
     // HANDLE URL PARAMETERS (ADVANCED)
     const url = new URL(window.location.href);
+
+    const reportProblem = url.searchParams.get("REPORT_PROBLEM");
+    if (reportProblem !== null) {
+      this.setState({ reportProblem: true, chkIncludeMapScaleAndExtent: true });
+    }
+
+    const myMapsId = url.searchParams.get("MY_MAPS_ID");
+    if (myMapsId !== null) {
+      this.setState({ myMapsId });
+    }
+
+    const featureId = url.searchParams.get("MY_MAPS_FEATURE_ID");
+    if (featureId !== null) {
+      this.setState({ featureId });
+    }
+
     const id = url.searchParams.get("ID");
     if (id !== null) {
       this.getJSON(getUrl + id, result => {
@@ -53,7 +72,9 @@ class App extends React.Component {
           rating: result.rating,
           email: result.email ? result.email : "",
           comments: result.comments ? result.comments : "",
-          otherUses: result.other_uses ? result.other_uses : ""
+          otherUses: result.other_uses ? result.other_uses : "",
+          chkIncludeMapScaleAndExtent: result.reportProblem ? result.reportProblem : false,
+          reportProblem: result.reportProblem ? result.reportProblem : ""
         });
       });
     }
@@ -94,6 +115,7 @@ class App extends React.Component {
   };
 
   validateEmail(email) {
+    // eslint-disable-next-line
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
@@ -139,7 +161,10 @@ class App extends React.Component {
       scale: this.state.chkIncludeMapScaleAndExtent ? scale : 0,
       url: document.referrer,
       contact: "sim-gis@simcoe.ca",
-      otherUses: this.state.otherUses
+      otherUses: this.state.otherUses,
+      reportProblem: this.state.reportProblem,
+      myMapsId: this.state.myMapsId,
+      featureId: this.state.featureId
     };
 
     this.postData(postUrl, feedbackItem);
@@ -193,88 +218,98 @@ class App extends React.Component {
         <GoogleReCaptcha onVerify={token => this.onCaptcha(token)} />
         <div id="main" className={this.state.botDetected ? "hidden" : this.state.submitted ? "" : "app"}>
           <div className={this.state.submitted ? "hidden" : ""}>
-            <h1 className="header">Feedback</h1>
-            <div className="intro">
-              Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear from you!
+            <h1 className="header">{this.state.reportProblem ? "Report a Problem" : "Feedback"}</h1>
+            <div className={this.state.reportProblem ? "hidden" : "intro"}>
+              Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear
+              from you!
               <br />
             </div>
 
             <div className="body">
-              <div className="question">What do you use our interactive maps for?</div>
-              <div className="question1-checkboxes">
+              <div className={this.state.reportProblem ? "hidden" : ""}>
+                <div className="question">What do you use our interactive maps for?</div>
+                <div className="question1-checkboxes">
+                  <FeedbackCheckbox
+                    checked={this.state.chkEducation}
+                    onChange={event => {
+                      this.setState({ chkEducation: event.target.checked });
+                    }}
+                    label="Education"
+                  />
+                  <FeedbackCheckbox
+                    checked={this.state.chkRecreation}
+                    onChange={event => {
+                      this.setState({ chkRecreation: event.target.checked });
+                    }}
+                    label="Recreation"
+                  />
+                  <FeedbackCheckbox
+                    checked={this.state.chkRealEstate}
+                    onChange={event => {
+                      this.setState({ chkRealEstate: event.target.checked });
+                    }}
+                    label="Real Estate"
+                  />
+                  <FeedbackCheckbox
+                    checked={this.state.chkBusiness}
+                    onChange={event => {
+                      this.setState({ chkBusiness: event.target.checked });
+                    }}
+                    label="Business"
+                  />
+                  <FeedbackCheckbox
+                    checked={this.state.chkDelivery}
+                    onChange={event => {
+                      this.setState({ chkDelivery: event.target.checked });
+                    }}
+                    label="Delivery"
+                  />
+                  <FeedbackCheckbox
+                    checked={this.state.chkEconomicDevelopment}
+                    onChange={event => {
+                      this.setState({ chkEconomicDevelopment: event.target.checked });
+                    }}
+                    label="Economic Development"
+                  />
+                </div>
+                <div className="otheruses-container">
+                  <label>OTHER:</label>&nbsp;
+                  <input className={"otheruses"} placeholder="" onChange={this.onOtherUsesChange} value={this.state.otherUses} />
+                </div>
+
+                <div className="question">Please rate the usefulness to you or your organization.</div>
+                <Ratings rating={this.state.rating} widgetRatedColors="blue" changeRating={this.changeRating} widgetDimensions="35px">
+                  <Ratings.Widget />
+                  <Ratings.Widget />
+                  <Ratings.Widget />
+                  <Ratings.Widget />
+                  <Ratings.Widget />
+                </Ratings>
+
+                <div className="question">Do you rely on this application for business use?</div>
                 <FeedbackCheckbox
-                  checked={this.state.chkEducation}
+                  checked={this.state.chkRelyOnBusiness}
                   onChange={event => {
-                    this.setState({ chkEducation: event.target.checked });
+                    this.setState({ chkRelyOnBusiness: event.target.checked });
                   }}
-                  label="Education"
-                />
-                <FeedbackCheckbox
-                  checked={this.state.chkRecreation}
-                  onChange={event => {
-                    this.setState({ chkRecreation: event.target.checked });
-                  }}
-                  label="Recreation"
-                />
-                <FeedbackCheckbox
-                  checked={this.state.chkRealEstate}
-                  onChange={event => {
-                    this.setState({ chkRealEstate: event.target.checked });
-                  }}
-                  label="Real Estate"
-                />
-                <FeedbackCheckbox
-                  checked={this.state.chkBusiness}
-                  onChange={event => {
-                    this.setState({ chkBusiness: event.target.checked });
-                  }}
-                  label="Business"
-                />
-                <FeedbackCheckbox
-                  checked={this.state.chkDelivery}
-                  onChange={event => {
-                    this.setState({ chkDelivery: event.target.checked });
-                  }}
-                  label="Delivery"
-                />
-                <FeedbackCheckbox
-                  checked={this.state.chkEconomicDevelopment}
-                  onChange={event => {
-                    this.setState({ chkEconomicDevelopment: event.target.checked });
-                  }}
-                  label="Economic Development"
+                  label="Yes I do rely on this for business use"
                 />
               </div>
-              <div className="otheruses-container">
-                <label>OTHER:</label>&nbsp;
-                <input className={"otheruses"} placeholder="" onChange={this.onOtherUsesChange} value={this.state.otherUses} />
-              </div>
-
-              <div className="question">Please rate the usefulness to you or your organization.</div>
-              <Ratings rating={this.state.rating} widgetRatedColors="blue" changeRating={this.changeRating} widgetDimensions="35px">
-                <Ratings.Widget />
-                <Ratings.Widget />
-                <Ratings.Widget />
-                <Ratings.Widget />
-                <Ratings.Widget />
-              </Ratings>
-
-              <div className="question">Do you rely on this application for business use?</div>
-              <FeedbackCheckbox
-                checked={this.state.chkRelyOnBusiness}
-                onChange={event => {
-                  this.setState({ chkRelyOnBusiness: event.target.checked });
-                }}
-                label="Yes I do rely on this for business use"
-              />
 
               <div className="question">If you wish to be contacted regarding your feedback please provide us your email address (optional)</div>
-              <input className={this.state.emailValid ? "email" : "email red"} placeholder="Enter Optional Email Address Here" onChange={this.onEmailChange} value={this.state.email} />
+              <input
+                className={this.state.emailValid ? "email" : "email red"}
+                placeholder="Enter Optional Email Address Here"
+                onChange={this.onEmailChange}
+                value={this.state.email}
+              />
 
-              <div className="question">Please provide us some feedback about your experience.</div>
+              <div className="question">
+                {this.state.reportProblem ? "Please provide details about the problem you're reporting." : "Please provide us some feedback about your experience."}
+              </div>
               <textarea className="comments" onChange={this.onCommentsChange} value={this.state.comments} />
 
-              <div>
+              <div className={this.state.reportProblem ? "hidden" : ""}>
                 <FeedbackCheckbox
                   checked={this.state.chkIncludeMapScaleAndExtent}
                   onChange={event => {
