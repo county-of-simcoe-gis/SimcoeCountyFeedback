@@ -73,8 +73,8 @@ class App extends React.Component {
           email: result.email ? result.email : "",
           comments: result.comments ? result.comments : "",
           otherUses: result.other_uses ? result.other_uses : "",
-          chkIncludeMapScaleAndExtent: result.reportProblem ? result.reportProblem : false,
-          reportProblem: result.reportProblem ? result.reportProblem : ""
+          chkIncludeMapScaleAndExtent: result.report_problem ? result.report_problem : false,
+          reportProblem: result.report_problem === null ? false : result.report_problem
         });
       });
     }
