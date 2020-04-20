@@ -4,6 +4,12 @@ import Checkbox from "./Checkbox";
 import Ratings from "react-ratings-declarative";
 import { GoogleReCaptchaProvider, GoogleReCaptcha } from "react-google-recaptcha-v3";
 import config from "./config.json";
+import ReactGA from "react-ga";
+
+if (config.googleAnalyticsID !== undefined && config.googleAnalyticsID !== "") {
+  ReactGA.initialize(config.googleAnalyticsID);
+  ReactGA.pageview(window.location.pathname + window.location.search);
+}
 
 const postUrl = config.postUrl;
 const getUrl = config.getUrl;
@@ -36,7 +42,7 @@ class App extends React.Component {
     botDetected: false,
     reportProblem: false,
     myMapsId: null,
-    featureId: null
+    featureId: null,
   };
 
   componentDidMount() {
@@ -60,7 +66,7 @@ class App extends React.Component {
 
     const id = url.searchParams.get("ID");
     if (id !== null) {
-      this.getJSON(getUrl + id, result => {
+      this.getJSON(getUrl + id, (result) => {
         this.setState({
           chkEducation: result.education ? result.education : false,
           chkRecreation: result.recreation ? result.recreation : false,
@@ -74,7 +80,7 @@ class App extends React.Component {
           comments: result.comments ? result.comments : "",
           otherUses: result.other_uses ? result.other_uses : "",
           chkIncludeMapScaleAndExtent: result.report_problem ? result.report_problem : false,
-          reportProblem: result.report_problem === null ? false : result.report_problem
+          reportProblem: result.report_problem === null ? false : result.report_problem,
         });
       });
     }
@@ -83,7 +89,7 @@ class App extends React.Component {
   //STARS
   changeRating = (newRating, name) => {
     this.setState({
-      rating: newRating
+      rating: newRating,
     });
   };
 
@@ -98,19 +104,19 @@ class App extends React.Component {
       chkRelyOnBusiness: false,
       chkIncludeMapScaleAndExtent: true,
       rating: 2,
-      emailValid: true
+      emailValid: true,
     });
   };
 
-  onEmailChange = evt => {
+  onEmailChange = (evt) => {
     this.setState({ email: evt.target.value });
   };
 
-  onOtherUsesChange = evt => {
+  onOtherUsesChange = (evt) => {
     this.setState({ otherUses: evt.target.value });
   };
 
-  onCommentsChange = evt => {
+  onCommentsChange = (evt) => {
     this.setState({ comments: evt.target.value });
   };
 
@@ -164,7 +170,7 @@ class App extends React.Component {
       otherUses: this.state.otherUses,
       reportProblem: this.state.reportProblem,
       myMapsId: this.state.myMapsId,
-      featureId: this.state.featureId
+      featureId: this.state.featureId,
     };
 
     this.postData(postUrl, feedbackItem);
@@ -177,18 +183,18 @@ class App extends React.Component {
 
   getJSON(url, callback) {
     return fetch(url)
-      .then(response => response.json())
-      .then(responseJson => {
+      .then((response) => response.json())
+      .then((responseJson) => {
         // CALLBACK WITH RESULT
         if (callback !== undefined) callback(responseJson);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }
 
   onCaptcha(token) {
-    this.getJSON(captchaResponseUrl + token, resp => {
+    this.getJSON(captchaResponseUrl + token, (resp) => {
       if (resp.score < 0.1) this.setState({ botDetected: true });
     });
   }
@@ -201,13 +207,13 @@ class App extends React.Component {
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
       credentials: "same-origin", // include, *same-origin, omit
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
         //'Content-Type': 'application/x-www-form-urlencoded',
       },
       redirect: "follow", // manual, *follow, error
       referrer: "no-referrer", // no-referrer, *client
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
-    }).then(response => {
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    }).then((response) => {
       return response;
     });
   }
@@ -215,13 +221,12 @@ class App extends React.Component {
   render() {
     return (
       <GoogleReCaptchaProvider reCaptchaKey={key}>
-        <GoogleReCaptcha onVerify={token => this.onCaptcha(token)} />
+        <GoogleReCaptcha onVerify={(token) => this.onCaptcha(token)} />
         <div id="main" className={this.state.botDetected ? "hidden" : this.state.submitted ? "" : "app"}>
           <div className={this.state.submitted ? "hidden" : ""}>
             <h1 className="header">{this.state.reportProblem ? "Report a Problem" : "Feedback"}</h1>
             <div className={this.state.reportProblem ? "hidden" : "intro"}>
-              Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear
-              from you!
+              Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear from you!
               <br />
             </div>
 
@@ -231,42 +236,42 @@ class App extends React.Component {
                 <div className="question1-checkboxes">
                   <FeedbackCheckbox
                     checked={this.state.chkEducation}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.setState({ chkEducation: event.target.checked });
                     }}
                     label="Education"
                   />
                   <FeedbackCheckbox
                     checked={this.state.chkRecreation}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.setState({ chkRecreation: event.target.checked });
                     }}
                     label="Recreation"
                   />
                   <FeedbackCheckbox
                     checked={this.state.chkRealEstate}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.setState({ chkRealEstate: event.target.checked });
                     }}
                     label="Real Estate"
                   />
                   <FeedbackCheckbox
                     checked={this.state.chkBusiness}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.setState({ chkBusiness: event.target.checked });
                     }}
                     label="Business"
                   />
                   <FeedbackCheckbox
                     checked={this.state.chkDelivery}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.setState({ chkDelivery: event.target.checked });
                     }}
                     label="Delivery"
                   />
                   <FeedbackCheckbox
                     checked={this.state.chkEconomicDevelopment}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.setState({ chkEconomicDevelopment: event.target.checked });
                     }}
                     label="Economic Development"
@@ -289,7 +294,7 @@ class App extends React.Component {
                 <div className="question">Do you rely on this application for business use?</div>
                 <FeedbackCheckbox
                   checked={this.state.chkRelyOnBusiness}
-                  onChange={event => {
+                  onChange={(event) => {
                     this.setState({ chkRelyOnBusiness: event.target.checked });
                   }}
                   label="Yes I do rely on this for business use"
@@ -297,22 +302,15 @@ class App extends React.Component {
               </div>
 
               <div className="question">If you wish to be contacted regarding your feedback please provide us your email address (optional)</div>
-              <input
-                className={this.state.emailValid ? "email" : "email red"}
-                placeholder="Enter Optional Email Address Here"
-                onChange={this.onEmailChange}
-                value={this.state.email}
-              />
+              <input className={this.state.emailValid ? "email" : "email red"} placeholder="Enter Optional Email Address Here" onChange={this.onEmailChange} value={this.state.email} />
 
-              <div className="question">
-                {this.state.reportProblem ? "Please provide details about the problem you're reporting." : "Please provide us some feedback about your experience."}
-              </div>
+              <div className="question">{this.state.reportProblem ? "Please provide details about the problem you're reporting." : "Please provide us some feedback about your experience."}</div>
               <textarea className="comments" onChange={this.onCommentsChange} value={this.state.comments} />
 
               <div className={this.state.reportProblem ? "hidden" : ""}>
                 <FeedbackCheckbox
                   checked={this.state.chkIncludeMapScaleAndExtent}
-                  onChange={event => {
+                  onChange={(event) => {
                     this.setState({ chkIncludeMapScaleAndExtent: event.target.checked });
                   }}
                   label="Include my map scale and extent with the feedback"
@@ -347,7 +345,7 @@ class App extends React.Component {
 
 export default App;
 
-const FeedbackCheckbox = props => {
+const FeedbackCheckbox = (props) => {
   return (
     <label>
       <Checkbox checked={props.checked} onChange={props.onChange} />
