@@ -5,11 +5,13 @@ import Ratings from "react-ratings-declarative";
 import { GoogleReCaptchaProvider, GoogleReCaptcha } from "react-google-recaptcha-v3";
 import config from "./config.json";
 import ReactGA from "react-ga";
+import { detect } from "detect-browser";
 
 if (config.googleAnalyticsID !== undefined && config.googleAnalyticsID !== "") {
   ReactGA.initialize(config.googleAnalyticsID);
   ReactGA.pageview(window.location.pathname + window.location.search);
 }
+
 
 const postUrl = config.postUrl;
 const getUrl = config.getUrl;
@@ -145,7 +147,12 @@ class App extends React.Component {
     const centerx = url.searchParams.get("centerx");
     const centery = url.searchParams.get("centery");
     const scale = url.searchParams.get("scale");
-
+    let client = "";
+    const browser = detect();
+    if (browser) {
+      //{"name":"chrome","version":"89.0.4389","os":"Windows 10","type":"browser"}
+      client= `${browser.type} ${browser.name} ${browser.version} ${browser.os}`;
+    }
     // CREATE OBJ TO SEND TO API
     const feedbackItem = {
       education: this.state.chkEducation,
@@ -156,7 +163,7 @@ class App extends React.Component {
       economicDevelopment: this.state.chkEconomicDevelopment,
       rating: this.state.rating,
       forBusinessUse: this.state.chkRelyOnBusiness,
-      comments: this.state.comments.replace(/\n/g, "<br />"),
+      comments: `${this.state.comments}\n\nClient: ${client}`,
       email: this.state.email,
       xmin: this.state.chkIncludeMapScaleAndExtent ? xmin : 0,
       ymin: this.state.chkIncludeMapScaleAndExtent ? ymin : 0,
@@ -219,6 +226,7 @@ class App extends React.Component {
   }
 
   render() {
+    // handle the case where we don't detect the browser
     return (
       <GoogleReCaptchaProvider reCaptchaKey={key}>
         <GoogleReCaptcha onVerify={(token) => this.onCaptcha(token)} />
