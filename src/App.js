@@ -2,10 +2,7 @@ import React from "react";
 import "./App.css";
 import Checkbox from "./Checkbox";
 import Ratings from "react-ratings-declarative";
-import {
-  GoogleReCaptchaProvider,
-  GoogleReCaptcha,
-} from "react-google-recaptcha-v3";
+import { GoogleReCaptchaProvider, GoogleReCaptcha } from "react-google-recaptcha-v3";
 import config from "./config.json";
 import ReactGA from "react-ga";
 import { detect } from "detect-browser";
@@ -77,21 +74,14 @@ class App extends React.Component {
           chkRealEstate: result.real_estate ? result.real_estate : false,
           chkBusiness: result.business ? result.business : false,
           chkDelivery: result.delivery ? result.delivery : false,
-          chkEconomicDevelopment: result.economic_development
-            ? result.economic_development
-            : false,
-          chkRelyOnBusiness: result.for_business_use
-            ? result.for_business_use
-            : false,
+          chkEconomicDevelopment: result.economic_development ? result.economic_development : false,
+          chkRelyOnBusiness: result.for_business_use ? result.for_business_use : false,
           rating: result.rating,
           email: result.email ? result.email : "",
           comments: result.comments ? result.comments : "",
           otherUses: result.other_uses ? result.other_uses : "",
-          chkIncludeMapScaleAndExtent: result.report_problem
-            ? result.report_problem
-            : false,
-          reportProblem:
-            result.report_problem === null ? false : result.report_problem,
+          chkIncludeMapScaleAndExtent: result.report_problem ? result.report_problem : false,
+          reportProblem: result.report_problem === null ? false : result.report_problem,
         });
       });
     }
@@ -133,8 +123,7 @@ class App extends React.Component {
 
   validateEmail(email) {
     // eslint-disable-next-line
-    var re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
 
@@ -174,7 +163,7 @@ class App extends React.Component {
       economicDevelopment: this.state.chkEconomicDevelopment,
       rating: this.state.rating,
       forBusinessUse: this.state.chkRelyOnBusiness,
-      comments: `${this.state.comments}\n\nClient: ${client}`,
+      comments: `${this.state.comments}\n\nClient: ${client}\n\nOrigin:${url}\n\nMap ID:${mapid}`,
       email: this.state.email,
       xmin: this.state.chkIncludeMapScaleAndExtent ? xmin : 0,
       ymin: this.state.chkIncludeMapScaleAndExtent ? ymin : 0,
@@ -187,12 +176,12 @@ class App extends React.Component {
       contact: "sim-gis@simcoe.ca",
       otherUses: this.state.otherUses,
       reportProblem: this.state.reportProblem,
-      myMapsId: this.state.myMapsId,
+      myMapsId: this.state.myMapsId || mapid,
       featureId: this.state.featureId,
     };
 
-    if (mapid !== undefined && mapid !== null) feedbackItem["map_id"] = mapid;
-    console.log(JSON.stringify(feedbackItem));
+    //if (mapid) feedbackItem["map_id"] = mapid;
+    //console.log(JSON.stringify(feedbackItem));
     this.postData(postUrl, feedbackItem, (response) => {
       this.setState({ submitted: true });
     });
@@ -241,32 +230,17 @@ class App extends React.Component {
     return (
       <GoogleReCaptchaProvider reCaptchaKey={key}>
         <GoogleReCaptcha onVerify={(token) => this.onCaptcha(token)} />
-        <div
-          id="main"
-          className={
-            this.state.botDetected
-              ? "hidden"
-              : this.state.submitted
-              ? ""
-              : "app"
-          }
-        >
+        <div id="main" className={this.state.botDetected ? "hidden" : this.state.submitted ? "" : "app"}>
           <div className={this.state.submitted ? "hidden" : ""}>
-            <h1 className="header">
-              {this.state.reportProblem ? "Report a Problem" : "Feedback"}
-            </h1>
+            <h1 className="header">{this.state.reportProblem ? "Report a Problem" : "Feedback"}</h1>
             <div className={this.state.reportProblem ? "hidden" : "intro"}>
-              Help improve your online mapping experience. Please provide any
-              feedback you feel is necessary to make your experience better. We
-              read every comment and want to hear from you!
+              Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear from you!
               <br />
             </div>
 
             <div className="body">
               <div className={this.state.reportProblem ? "hidden" : ""}>
-                <div className="question">
-                  What do you use our interactive maps for?
-                </div>
+                <div className="question">What do you use our interactive maps for?</div>
                 <div className="question1-checkboxes">
                   <FeedbackCheckbox
                     checked={this.state.chkEducation}
@@ -315,23 +289,11 @@ class App extends React.Component {
                 </div>
                 <div className="otheruses-container">
                   <label>OTHER:</label>&nbsp;
-                  <input
-                    className={"otheruses"}
-                    placeholder=""
-                    onChange={this.onOtherUsesChange}
-                    value={this.state.otherUses}
-                  />
+                  <input className={"otheruses"} placeholder="" onChange={this.onOtherUsesChange} value={this.state.otherUses} />
                 </div>
 
-                <div className="question">
-                  Please rate the usefulness to you or your organization.
-                </div>
-                <Ratings
-                  rating={this.state.rating}
-                  widgetRatedColors="blue"
-                  changeRating={this.changeRating}
-                  widgetDimensions="35px"
-                >
+                <div className="question">Please rate the usefulness to you or your organization.</div>
+                <Ratings rating={this.state.rating} widgetRatedColors="blue" changeRating={this.changeRating} widgetDimensions="35px">
                   <Ratings.Widget />
                   <Ratings.Widget />
                   <Ratings.Widget />
@@ -339,9 +301,7 @@ class App extends React.Component {
                   <Ratings.Widget />
                 </Ratings>
 
-                <div className="question">
-                  Do you rely on this application for business use?
-                </div>
+                <div className="question">Do you rely on this application for business use?</div>
                 <FeedbackCheckbox
                   checked={this.state.chkRelyOnBusiness}
                   onChange={(event) => {
@@ -351,27 +311,11 @@ class App extends React.Component {
                 />
               </div>
 
-              <div className="question">
-                If you wish to be contacted regarding your feedback please
-                provide us your email address (optional)
-              </div>
-              <input
-                className={this.state.emailValid ? "email" : "email red"}
-                placeholder="Enter Optional Email Address Here"
-                onChange={this.onEmailChange}
-                value={this.state.email}
-              />
+              <div className="question">If you wish to be contacted regarding your feedback please provide us your email address (optional)</div>
+              <input className={this.state.emailValid ? "email" : "email red"} placeholder="Enter Optional Email Address Here" onChange={this.onEmailChange} value={this.state.email} />
 
-              <div className="question">
-                {this.state.reportProblem
-                  ? "Please provide details about the problem you're reporting."
-                  : "Please provide us some feedback about your experience."}
-              </div>
-              <textarea
-                className="comments"
-                onChange={this.onCommentsChange}
-                value={this.state.comments}
-              />
+              <div className="question">{this.state.reportProblem ? "Please provide details about the problem you're reporting." : "Please provide us some feedback about your experience."}</div>
+              <textarea className="comments" onChange={this.onCommentsChange} value={this.state.comments} />
 
               <div className={this.state.reportProblem ? "hidden" : ""}>
                 <FeedbackCheckbox
@@ -386,18 +330,10 @@ class App extends React.Component {
               </div>
 
               <div className="question">
-                <button
-                  className="button blue"
-                  style={{ marginRight: "5px", width: "150px" }}
-                  onClick={this.onSendFeedbackButton}
-                >
+                <button className="button blue" style={{ marginRight: "5px", width: "150px" }} onClick={this.onSendFeedbackButton}>
                   Send Feedback
                 </button>
-                <button
-                  className="button"
-                  style={{ width: "75px" }}
-                  onClick={this.onResetButton}
-                >
+                <button className="button" style={{ width: "75px" }} onClick={this.onResetButton}>
                   Reset
                 </button>
               </div>
