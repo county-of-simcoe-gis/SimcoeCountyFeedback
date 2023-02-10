@@ -4,12 +4,12 @@ import Checkbox from "./Checkbox";
 import Ratings from "react-ratings-declarative";
 import { GoogleReCaptchaProvider, GoogleReCaptcha } from "react-google-recaptcha-v3";
 import config from "./config.json";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import { detect } from "detect-browser";
 
 if (config.googleAnalyticsID !== undefined && config.googleAnalyticsID !== "") {
   ReactGA.initialize(config.googleAnalyticsID);
-  ReactGA.pageview(window.location.pathname + window.location.search);
+  ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
 }
 
 const postUrl = config.postUrl;
