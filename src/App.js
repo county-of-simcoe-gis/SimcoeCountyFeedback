@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Checkbox from "./Checkbox";
 import Ratings from "react-ratings-declarative";
@@ -23,119 +23,112 @@ const getUrl = config.getUrl;
 const key = config.productionCaptchaKey;
 const captchaResponseUrl = config.productionCaptchaResponseUrl;
 
-class App extends React.Component {
-  state = {
-    chkEducation: false,
-    chkRecreation: false,
-    chkRealEstate: false,
-    chkBusiness: false,
-    chkDelivery: false,
-    chkEconomicDevelopment: false,
-    chkRelyOnBusiness: false,
-    chkIncludeMapScaleAndExtent: true,
-    submitSuccess: false,
-    rating: 2.5,
-    email: "",
-    emailValid: true,
-    comments: "",
-    submitted: false,
-    otherUses: "",
-    botDetected: false,
-    reportProblem: false,
-    myMapsId: null,
-    featureId: null,
-  };
+const App = () => {
+  const [chkEducation, setChkEducation] = useState(false);
+  const [chkRecreation, setChkRecreation] = useState(false);
+  const [chkRealEstate, setChkRealEstate] = useState(false);
+  const [chkBusiness, setChkBusiness] = useState(false);
+  const [chkDelivery, setChkDelivery] = useState(false);
+  const [chkEconomicDevelopment, setChkEconomicDevelopment] = useState(false);
+  const [chkRelyOnBusiness, setChkRelyOnBusiness] = useState(false);
+  const [chkIncludeMapScaleAndExtent, setChkIncludeMapScaleAndExtent] = useState(true);
+  const [rating, setRating] = useState(2.5);
+  const [email, setEmail] = useState("");
+  const [emailValid, setEmailValid] = useState(true);
+  const [comments, setComments] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [otherUses, setOtherUses] = useState("");
+  const [botDetected, setBotDetected] = useState(false);
+  const [reportProblem, setReportProblem] = useState(false);
+  const [myMapsId, setMyMapsId] = useState(null);
+  const [featureId, setFeatureId] = useState(null);
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
 
-  componentDidMount() {
+  useEffect(() => {
     // HANDLE URL PARAMETERS (ADVANCED)
     const url = new URL(window.location.href);
 
     const reportProblem = url.searchParams.get("REPORT_PROBLEM");
     if (reportProblem !== null) {
-      this.setState({ reportProblem: true, chkIncludeMapScaleAndExtent: true });
+      setReportProblem(true);
+      setChkIncludeMapScaleAndExtent(true);
     }
 
     const myMapsId = url.searchParams.get("MY_MAPS_ID");
     if (myMapsId !== null) {
-      this.setState({ myMapsId });
+      setMyMapsId(myMapsId);
     }
 
     const featureId = url.searchParams.get("MY_MAPS_FEATURE_ID");
     if (featureId !== null) {
-      this.setState({ featureId });
+      setFeatureId(featureId);
     }
 
     const id = url.searchParams.get("ID");
     if (id !== null) {
-      this.getJSON(getUrl + id, (result) => {
-        this.setState({
-          chkEducation: result.education ? result.education : false,
-          chkRecreation: result.recreation ? result.recreation : false,
-          chkRealEstate: result.real_estate ? result.real_estate : false,
-          chkBusiness: result.business ? result.business : false,
-          chkDelivery: result.delivery ? result.delivery : false,
-          chkEconomicDevelopment: result.economic_development ? result.economic_development : false,
-          chkRelyOnBusiness: result.for_business_use ? result.for_business_use : false,
-          rating: result.rating,
-          email: result.email ? result.email : "",
-          comments: result.comments ? result.comments : "",
-          otherUses: result.other_uses ? result.other_uses : "",
-          chkIncludeMapScaleAndExtent: result.report_problem ? result.report_problem : false,
-          reportProblem: result.report_problem === null ? false : result.report_problem,
-        });
+      getJSON(getUrl + id, (result) => {
+        setChkEducation(result.education ? result.education : false);
+        setChkRecreation(result.recreation ? result.recreation : false);
+        setChkRealEstate(result.real_estate ? result.real_estate : false);
+        setChkBusiness(result.business ? result.business : false);
+        setChkDelivery(result.delivery ? result.delivery : false);
+        setChkEconomicDevelopment(result.economic_development ? result.economic_development : false);
+        setChkRelyOnBusiness(result.for_business_use ? result.for_business_use : false);
+        setRating(result.rating);
+        setEmail(result.email ? result.email : "");
+        setComments(result.comments ? result.comments : "");
+        setOtherUses(result.other_uses ? result.other_uses : "");
+        setChkIncludeMapScaleAndExtent(result.report_problem ? result.report_problem : false);
+        setReportProblem(result.report_problem === null ? false : result.report_problem);
       });
     }
-  }
+  }, []);
 
-  //STARS
-  changeRating = (newRating, name) => {
-    this.setState({
-      rating: newRating,
-    });
+  const changeRating = (newRating) => {
+    setRating(newRating);
   };
 
-  onResetButton = () => {
-    this.setState({
-      chkEducation: false,
-      chkRecreation: false,
-      chkRealEstate: false,
-      chkBusiness: false,
-      chkDelivery: false,
-      chkEconomicDevelopment: false,
-      chkRelyOnBusiness: false,
-      chkIncludeMapScaleAndExtent: true,
-      rating: 2,
-      emailValid: true,
-    });
+  const onResetButton = () => {
+    setChkEducation(false);
+    setChkRecreation(false);
+    setChkRealEstate(false);
+    setChkBusiness(false);
+    setChkDelivery(false);
+    setChkEconomicDevelopment(false);
+    setChkRelyOnBusiness(false);
+    setChkIncludeMapScaleAndExtent(true);
+    setRating(2.5);
+    setEmailValid(true);
+    setOtherUses("");
   };
 
-  onEmailChange = (evt) => {
-    this.setState({ email: evt.target.value });
+  const onEmailChange = (evt) => {
+    setEmail(evt.target.value);
   };
 
-  onOtherUsesChange = (evt) => {
-    this.setState({ otherUses: evt.target.value });
+  const onOtherUsesChange = (evt) => {
+    setOtherUses(evt.target.value);
   };
 
-  onCommentsChange = (evt) => {
-    this.setState({ comments: evt.target.value });
+  const onCommentsChange = (evt) => {
+    setComments(evt.target.value);
   };
 
-  validateEmail(email) {
-    // eslint-disable-next-line
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  }
+  const onSendFeedbackButton = () => {
+    if (!validateEmail(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
 
-  onSendFeedbackButton = () => {
+    setFeedbackSubmitting(true);
     // GET CHECKBOX ANSWERS
     let usage = [];
-    if (this.state.chkEducation) usage.push("Education");
-    if (this.state.chkRecreation) usage.push("Recreation");
-    if (this.state.chkRealEstate) usage.push("Real Estate");
-    if (this.state.chkBusiness) usage.push("Business");
-    if (this.state.chkDelivery) usage.push("Delivery");
-    if (this.state.chkEconomicDevelopment) usage.push("Economic Development");
+    if (chkEducation) usage.push("Education");
+    if (chkRecreation) usage.push("Recreation");
+    if (chkRealEstate) usage.push("Real Estate");
+    if (chkBusiness) usage.push("Business");
+    if (chkDelivery) usage.push("Delivery");
+    if (chkEconomicDevelopment) usage.push("Economic Development");
 
     // GET URL PARAMETERS
     const url = new URL(window.location.href);
@@ -155,57 +148,83 @@ class App extends React.Component {
     }
     // CREATE OBJ TO SEND TO API
     const feedbackItem = {
-      education: this.state.chkEducation,
-      recreation: this.state.chkRecreation,
-      realEstate: this.state.chkRealEstate,
-      business: this.state.chkBusiness,
-      delivery: this.state.chkDelivery,
-      economicDevelopment: this.state.chkEconomicDevelopment,
-      rating: this.state.rating,
-      forBusinessUse: this.state.chkRelyOnBusiness,
-      comments: `${this.state.comments}\n\nClient: ${client}\n\nOrigin:${url}\n\nMap ID:${mapid}`,
-      email: this.state.email,
-      xmin: this.state.chkIncludeMapScaleAndExtent ? xmin : 0,
-      ymin: this.state.chkIncludeMapScaleAndExtent ? ymin : 0,
-      xmax: this.state.chkIncludeMapScaleAndExtent ? xmax : 0,
-      ymax: this.state.chkIncludeMapScaleAndExtent ? ymax : 0,
-      centerX: this.state.chkIncludeMapScaleAndExtent ? centerx : 0,
-      centerY: this.state.chkIncludeMapScaleAndExtent ? centery : 0,
-      scale: this.state.chkIncludeMapScaleAndExtent ? scale : 0,
+      education: chkEducation,
+      recreation: chkRecreation,
+      realEstate: chkRealEstate,
+      business: chkBusiness,
+      delivery: chkDelivery,
+      economicDevelopment: chkEconomicDevelopment,
+      rating: rating,
+      forBusinessUse: chkRelyOnBusiness,
+      comments: `${comments}\n\nClient: ${client}\n\nOrigin:${url}\n\nMap ID:${mapid}`,
+      email: email,
+      xmin: chkIncludeMapScaleAndExtent ? xmin : 0,
+      ymin: chkIncludeMapScaleAndExtent ? ymin : 0,
+      xmax: chkIncludeMapScaleAndExtent ? xmax : 0,
+      ymax: chkIncludeMapScaleAndExtent ? ymax : 0,
+      centerX: chkIncludeMapScaleAndExtent ? centerx : 0,
+      centerY: chkIncludeMapScaleAndExtent ? centery : 0,
+      scale: chkIncludeMapScaleAndExtent ? scale : 0,
       url: document.referrer,
       contact: "sim-gis@simcoe.ca",
-      otherUses: this.state.otherUses,
-      reportProblem: this.state.reportProblem,
-      myMapsId: this.state.myMapsId || mapid,
-      featureId: this.state.featureId,
+      otherUses: otherUses,
+      reportProblem: reportProblem,
+      myMapsId: myMapsId || mapid,
+      featureId: featureId,
     };
 
     //if (mapid) feedbackItem["map_id"] = mapid;
     //console.log(JSON.stringify(feedbackItem));
-    this.postData(postUrl, feedbackItem, (response) => {
-      this.setState({ submitted: true });
+    postData(postUrl, feedbackItem, (response) => {
+      setSubmitted(true);
+      setFeedbackSubmitting(false);
     });
   };
 
-  getJSON(url, callback) {
+  const validateEmail = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const getJSON = (url, callback) => {
     return fetch(url)
-      .then((response) => response.json())
+      .then((response) => {
+        console.log("getJSON", response);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((responseJson) => {
+        if (Object.keys(responseJson).length === 0) {
+          console.error("Received empty data from the server.");
+          if (callback !== undefined) callback();
+          return;
+        }
         // CALLBACK WITH RESULT
         if (callback !== undefined) callback(responseJson);
+        else return responseJson;
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Fetch error:", error);
+        if (callback !== undefined) callback();
+        else return;
       });
-  }
+  };
 
-  onCaptcha(token) {
-    this.getJSON(captchaResponseUrl + token, (resp) => {
-      if (resp.score < 0.1) this.setState({ botDetected: true });
-    });
-  }
+  const onCaptcha = (token) => {
+    if (token)
+      try {
+        getJSON(captchaResponseUrl + token, (resp) => {
+          if (resp && resp.score < 0.1) setBotDetected(true);
+        });
+      } catch (e) {
+        console.log("Error retrieving catcha score", e);
+        setBotDetected(true);
+      }
+  };
 
-  postData(url, data = {}, callback) {
+  const postData = (url, data = {}, callback) => {
     // Default options are marked with *
     return fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -223,137 +242,131 @@ class App extends React.Component {
       callback(response);
       //return response;
     });
-  }
+  };
 
-  render() {
-    // handle the case where we don't detect the browser
-    return (
-      <GoogleReCaptchaProvider reCaptchaKey={key}>
-        <GoogleReCaptcha onVerify={(token) => this.onCaptcha(token)} />
-        <div id="main" className={this.state.botDetected ? "hidden" : this.state.submitted ? "" : "app"}>
-          <div className={this.state.submitted ? "hidden" : ""}>
-            <h1 className="header">{this.state.reportProblem ? "Report a Problem" : "Feedback"}</h1>
-            <div className={this.state.reportProblem ? "hidden" : "intro"}>
-              Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear from you!
-              <br />
-            </div>
-
-            <div className="body">
-              <div className={this.state.reportProblem ? "hidden" : ""}>
-                <div className="question">What do you use our interactive maps for?</div>
-                <div className="question1-checkboxes">
-                  <FeedbackCheckbox
-                    checked={this.state.chkEducation}
-                    onChange={(event) => {
-                      this.setState({ chkEducation: event.target.checked });
-                    }}
-                    label="Education"
-                  />
-                  <FeedbackCheckbox
-                    checked={this.state.chkRecreation}
-                    onChange={(event) => {
-                      this.setState({ chkRecreation: event.target.checked });
-                    }}
-                    label="Recreation"
-                  />
-                  <FeedbackCheckbox
-                    checked={this.state.chkRealEstate}
-                    onChange={(event) => {
-                      this.setState({ chkRealEstate: event.target.checked });
-                    }}
-                    label="Real Estate"
-                  />
-                  <FeedbackCheckbox
-                    checked={this.state.chkBusiness}
-                    onChange={(event) => {
-                      this.setState({ chkBusiness: event.target.checked });
-                    }}
-                    label="Business"
-                  />
-                  <FeedbackCheckbox
-                    checked={this.state.chkDelivery}
-                    onChange={(event) => {
-                      this.setState({ chkDelivery: event.target.checked });
-                    }}
-                    label="Delivery"
-                  />
-                  <FeedbackCheckbox
-                    checked={this.state.chkEconomicDevelopment}
-                    onChange={(event) => {
-                      this.setState({
-                        chkEconomicDevelopment: event.target.checked,
-                      });
-                    }}
-                    label="Economic Development"
-                  />
-                </div>
-                <div className="otheruses-container">
-                  <label>OTHER:</label>&nbsp;
-                  <input className={"otheruses"} placeholder="" onChange={this.onOtherUsesChange} value={this.state.otherUses} />
-                </div>
-
-                <div className="question">Please rate the usefulness to you or your organization.</div>
-                <Ratings rating={this.state.rating} widgetRatedColors="blue" changeRating={this.changeRating} widgetDimensions="35px">
-                  <Ratings.Widget />
-                  <Ratings.Widget />
-                  <Ratings.Widget />
-                  <Ratings.Widget />
-                  <Ratings.Widget />
-                </Ratings>
-
-                <div className="question">Do you rely on this application for business use?</div>
-                <FeedbackCheckbox
-                  checked={this.state.chkRelyOnBusiness}
-                  onChange={(event) => {
-                    this.setState({ chkRelyOnBusiness: event.target.checked });
-                  }}
-                  label="Yes I do rely on this for business use"
-                />
-              </div>
-
-              <div className="question">If you wish to be contacted regarding your feedback please provide us your email address (optional)</div>
-              <input className={this.state.emailValid ? "email" : "email red"} placeholder="Enter Optional Email Address Here" onChange={this.onEmailChange} value={this.state.email} />
-
-              <div className="question">{this.state.reportProblem ? "Please provide details about the problem you're reporting." : "Please provide us some feedback about your experience."}</div>
-              <textarea className="comments" onChange={this.onCommentsChange} value={this.state.comments} />
-
-              <div className={this.state.reportProblem ? "hidden" : ""}>
-                <FeedbackCheckbox
-                  checked={this.state.chkIncludeMapScaleAndExtent}
-                  onChange={(event) => {
-                    this.setState({
-                      chkIncludeMapScaleAndExtent: event.target.checked,
-                    });
-                  }}
-                  label="Include my map scale and extent with the feedback"
-                />
-              </div>
-
-              <div className="question">
-                <button className="button blue" style={{ marginRight: "5px", width: "150px" }} onClick={this.onSendFeedbackButton}>
-                  Send Feedback
-                </button>
-                <button className="button" style={{ width: "75px" }} onClick={this.onResetButton}>
-                  Reset
-                </button>
-              </div>
-            </div>
+  // handle the case where we don't detect the browser
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={key}>
+      <GoogleReCaptcha onVerify={(token) => onCaptcha(token)} />
+      <div id="main" className={botDetected ? "hidden" : submitted ? "" : "app"}>
+        <div className={submitted ? "hidden" : ""}>
+          <h1 className="header">{reportProblem ? "Report a Problem" : "Feedback"}</h1>
+          <div className={reportProblem ? "hidden" : "intro"}>
+            Help improve your online mapping experience. Please provide any feedback you feel is necessary to make your experience better. We read every comment and want to hear from you!
+            <br />
           </div>
 
-          <div className={this.state.submitted ? "success" : "hidden"}>
-            Thank you for the Feedback! <br />
-            If you left a question and email, we'll get back to you shortly!
-          </div>
+          <div className="body">
+            <div className={reportProblem ? "hidden" : ""}>
+              <div className="question">What do you use our interactive maps for?</div>
+              <div className="question1-checkboxes">
+                <FeedbackCheckbox
+                  checked={chkEducation}
+                  onChange={(event) => {
+                    setChkEducation(event.target.checked);
+                  }}
+                  label="Education"
+                />
+                <FeedbackCheckbox
+                  checked={chkRecreation}
+                  onChange={(event) => {
+                    setChkRecreation(event.target.checked);
+                  }}
+                  label="Recreation"
+                />
+                <FeedbackCheckbox
+                  checked={chkRealEstate}
+                  onChange={(event) => {
+                    setChkRealEstate(event.target.checked);
+                  }}
+                  label="Real Estate"
+                />
+                <FeedbackCheckbox
+                  checked={chkBusiness}
+                  onChange={(event) => {
+                    setChkBusiness(event.target.checked);
+                  }}
+                  label="Business"
+                />
+                <FeedbackCheckbox
+                  checked={chkDelivery}
+                  onChange={(event) => {
+                    setChkDelivery(event.target.checked);
+                  }}
+                  label="Delivery"
+                />
+                <FeedbackCheckbox
+                  checked={chkEconomicDevelopment}
+                  onChange={(event) => {
+                    setChkEconomicDevelopment(event.target.checked);
+                  }}
+                  label="Economic Development"
+                />
+              </div>
+              <div className="otheruses-container">
+                <label>OTHER:</label>&nbsp;
+                <input className={"otheruses"} placeholder="" onChange={onOtherUsesChange} value={otherUses} />
+              </div>
 
-          <div className={this.state.botDetected ? "bot" : "hidden"}>
-            You've been identified as a bot. <br />
-            Contact sim-gis@simcoe.ca directly if you're human.
+              <div className="question">Please rate the usefulness to you or your organization.</div>
+              <Ratings rating={rating} widgetRatedColors="blue" changeRating={changeRating} widgetDimensions="35px">
+                <Ratings.Widget />
+                <Ratings.Widget />
+                <Ratings.Widget />
+                <Ratings.Widget />
+                <Ratings.Widget />
+              </Ratings>
+
+              <div className="question">Do you rely on this application for business use?</div>
+              <FeedbackCheckbox
+                checked={chkRelyOnBusiness}
+                onChange={(event) => {
+                  setChkRelyOnBusiness(event.target.checked);
+                }}
+                label="Yes I do rely on this for business use"
+              />
+            </div>
+
+            <div className="question">If you wish to be contacted regarding your feedback please provide us your email address (optional)</div>
+            <input className={emailValid ? "email" : "email red"} placeholder="Enter Optional Email Address Here" onChange={onEmailChange} value={email} />
+
+            <div className="question">{reportProblem ? "Please provide details about the problem you're reporting." : "Please provide us some feedback about your experience."}</div>
+            <textarea className="comments" onChange={onCommentsChange} value={comments} />
+
+            <div className={reportProblem ? "hidden" : ""}>
+              <FeedbackCheckbox
+                checked={chkIncludeMapScaleAndExtent}
+                onChange={(event) => {
+                  setChkIncludeMapScaleAndExtent(event.target.checked);
+                }}
+                label="Include my map scale and extent with the feedback"
+              />
+            </div>
+
+            <div className="question">
+              <button className="button blue" style={{ marginRight: "5px", width: "150px" }} onClick={onSendFeedbackButton} disabled={feedbackSubmitting}>
+                Send Feedback
+              </button>
+              <button className="button" style={{ width: "75px" }} onClick={onResetButton}>
+                Reset
+              </button>
+            </div>
           </div>
         </div>
-      </GoogleReCaptchaProvider>
-    );
-  }
-}
+
+        <div className={submitted ? "success" : "hidden"}>
+          Thank you for the Feedback! <br />
+          If you left a question and email, we'll get back to you shortly!
+        </div>
+
+        <div className={botDetected ? "bot" : "hidden"}>
+          You've been identified as a bot. <br />
+          Contact sim-gis@simcoe.ca directly if you're human.
+        </div>
+      </div>
+    </GoogleReCaptchaProvider>
+  );
+};
 
 export default App;
 
