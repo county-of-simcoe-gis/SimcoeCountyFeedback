@@ -1,8 +1,9 @@
 {
-    "postUrl" : "###/opengiswebapi/postFeedback",
-    "getUrl" : "###/opengiswebapi/getFeedback/",
-    "devCaptchaKey" : "###",
-    "devCaptchaResponseUrl" : "http://localhost:8085/getCaptchaResponse/DEV/",
-    "productionCaptchaKey" : "###",
-    "productionCaptchaResponseUrl" : "###/opengiswebapi/getCaptchaResponse/PRODUCTION/"
+  "postUrl": "https://opengis.simcoe.ca/api_v2/public/feedback",
+  "getUrl": "https://opengis.simcoe.ca/api_v2/public/feedback/",
+  "devCaptchaKey": "6Ld4tKcUAAAAAHLSilyMgGs0cxZe6yZ9XK5Bcej4",
+  "devCaptchaResponseUrl": "http://localhost:8085/getCaptchaResponse/DEV/",
+  "productionCaptchaKey": "6LfDs6cUAAAAALG4SzlXAmHMj4XRtzQyxJlznE2G",
+  "productionCaptchaResponseUrl": "https://opengis.simcoe.ca/api_v2/public/captcha/response/PRODUCTION/",
+  "googleAnalyticsID": "G-GC5RRXFML6"
 }
